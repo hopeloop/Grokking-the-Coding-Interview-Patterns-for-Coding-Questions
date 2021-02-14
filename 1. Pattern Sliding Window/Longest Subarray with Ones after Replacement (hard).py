@@ -17,27 +17,11 @@ Explanation: Replace the '0' at index 6, 9, and 10 to have the longest contiguou
 
 #mycode
 def length_of_longest_substring(arr, k):
-  win_start, max_len, cnt = 0, 0, 0
-  zero_posi=[0] * (k+1)
-
-  for win_end in range(len(arr)):
-    if arr[win_end] == 0:
-      cnt +=1
-      zero_posi[cnt-1]=win_end
-
-      if cnt > k:
-        win_start=zero_posi[0]+1
-        zero_posi=zero_posi[1:]+[0]
-        cnt -=1
-        
-    
-    max_len=max(max_len, win_end-win_start+1)
-
-  return max_len
+  return
 
 
-  #answer
-  def length_of_longest_substring(arr, k):
+# answer
+def length_of_longest_substring(arr, k):
   window_start, max_length, max_ones_count = 0, 0, 0
 
   # Try to extend the range [window_start, window_end]

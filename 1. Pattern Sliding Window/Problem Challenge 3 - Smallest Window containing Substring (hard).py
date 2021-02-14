@@ -25,44 +25,39 @@ Explanation: No substring in the given string has all characters of the pattern.
 
 
 #mycode
-import math
 def find_substring(str, pattern):
-  # TODO: Write your code here
-  p_dict={}
-  s_dict={}
-  result=""
+  pattern_dict ={}
+  min_len,min_window_start = len(str)+1 , len(str)+1
+  window_start,matched = 0,0
 
-  win_start, min_len = 0, math.inf
+  for ele in pattern:
+    if ele not in pattern_dict:
+      pattern_dict[ele] = 0
+    pattern_dict[ele] += 1
 
-  for p in pattern:
-    if p not in p_dict:
-      p_dict[p] = 1
-    else:
-      p_dict[p] += 1
+  for window_end in range(len(str)):
+    if str[window_end] in pattern_dict:
+      pattern_dict[str[window_end]] -= 1
+      if pattern_dict[str[window_end]] == 0:
+        matched += 1
 
-  for win_end in range(len(str)):
-    if str[win_end] not in s_dict:
-      s_dict[str[win_end]] = 1
-    else:
-      s_dict[str[win_end]] += 1
-    
-    print(s_dict)
+    while matched == len(pattern):
+      if matched == len(pattern):
+        if window_end - window_start + 1 <= min_len:
+          min_window_start = window_start
+          min_len = window_end - window_start + 1
 
-    while set(p_dict.keys()).issubset(set(s_dict.keys())):
-      if win_end-win_start+1 < min_len:
-        min_len=win_end-win_start+1
-        if win_end == len(str)-1:
-          result=str[win_start:]
-        else:
-          result=str[win_start:win_end+1]
+      if str[window_start] in pattern_dict:
+        if pattern_dict[str[window_start]] == 0:
+          matched -= 1
+        pattern_dict[str[window_start]] += 1
 
-      if s_dict[str[win_start]] == 1:
-        del s_dict[str[win_start]]
-      else:
-        s_dict[str[win_start]] -= 1
-      win_start += 1
+      window_start += 1
 
-  return result
+  if min_len > len(str):
+    return ""
+
+  return str[min_window_start:min_window_start+min_len]
 
 
 

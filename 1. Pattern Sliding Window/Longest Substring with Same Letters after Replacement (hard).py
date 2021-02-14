@@ -21,65 +21,64 @@ Output: 3
 Explanation: Replace the 'b' or 'd' with 'c' to have the longest repeating substring "ccc".
 '''
 
-#mycode
+
+# mycode
 def length_of_longest_substring(str, k):
-  # TODO: Write your code here
-  win_start, max_len, cnt = 0, 0, 0
-  dict_str={}
-  
-  for win_end in range(len(str)):
-    if str[win_end] not in dict_str:
-      dict_str[str[win_end]] = 1
-    else: 
-      dict_str[str[win_end]] += 1
+    window_start, max_len = 0, 0
+    char_frequency = {}
 
-    cnt=max(dict_str.values())
-    while win_end - win_start + 1 -cnt > k:
-      dict_str[str[win_start]] -= 1
-      win_start +=1
-    
-    max_len=max(max_len, win_end - win_start + 1)
+    for window_end in range(len(str)):
+        right = str[window_end]
+        if right not in char_frequency.keys():
+            char_frequency[right] = 0
+        char_frequency[right] += 1
 
-  return max_len
+        while window_end - window_start + 1 - max(char_frequency.values()) > k:
+            left = str[window_start]
+            char_frequency[left] -= 1
+            if char_frequency[left] == 0:
+                del char_frequency[left]
+            window_start += 1
+
+        max_len = max(max_len, window_end - window_start + 1)
+    return max_len
 
 
-#answer
+# answer
 def length_of_longest_substring(str, k):
-  window_start, max_length, max_repeat_letter_count = 0, 0, 0
-  frequency_map = {}
+    window_start, max_length, max_repeat_letter_count = 0, 0, 0
+    frequency_map = {}
 
-  # Try to extend the range [window_start, window_end]
-  for window_end in range(len(str)):
-    right_char = str[window_end]
-    if right_char not in frequency_map:
-      frequency_map[right_char] = 0
-    frequency_map[right_char] += 1
-    max_repeat_letter_count = max(
-      max_repeat_letter_count, frequency_map[right_char])
+    # Try to extend the range [window_start, window_end]
+    for window_end in range(len(str)):
+        right_char = str[window_end]
+        if right_char not in frequency_map:
+            frequency_map[right_char] = 0
+        frequency_map[right_char] += 1
+        max_repeat_letter_count = max(
+            max_repeat_letter_count, frequency_map[right_char])
 
-    # Current window size is from window_start to window_end, overall we have a letter which is
-    # repeating 'max_repeat_letter_count' times, this means we can have a window which has one letter
-    # repeating 'max_repeat_letter_count' times and the remaining letters we should replace.
-    # if the remaining letters are more than 'k', it is the time to shrink the window as we
-    # are not allowed to replace more than 'k' letters
-    if (window_end - window_start + 1 - max_repeat_letter_count) > k:
-      left_char = str[window_start]
-      frequency_map[left_char] -= 1
-      window_start += 1
+        # Current window size is from window_start to window_end, overall we have a letter which is
+        # repeating 'max_repeat_letter_count' times, this means we can have a window which has one letter
+        # repeating 'max_repeat_letter_count' times and the remaining letters we should replace.
+        # if the remaining letters are more than 'k', it is the time to shrink the window as we
+        # are not allowed to replace more than 'k' letters
+        if (window_end - window_start + 1 - max_repeat_letter_count) > k:
+            left_char = str[window_start]
+            frequency_map[left_char] -= 1
+            window_start += 1
 
-    max_length = max(max_length, window_end - window_start + 1)
-  return max_length
+        max_length = max(max_length, window_end - window_start + 1)
+    return max_length
 
 
 def main():
-  print(length_of_longest_substring("aabccbb", 2))
-  print(length_of_longest_substring("abbcb", 1))
-  print(length_of_longest_substring("abccde", 1))
+    print(length_of_longest_substring("aabccbb", 2))
+    print(length_of_longest_substring("abbcb", 1))
+    print(length_of_longest_substring("abccde", 1))
 
 
 main()
-
-
 
 '''
 Time Complexity 

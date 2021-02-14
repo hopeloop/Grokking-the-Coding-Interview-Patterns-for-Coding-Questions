@@ -27,42 +27,38 @@ Output: [2, 3, 4]
 Explanation: The three anagrams of the pattern in the given string are "bca", "cab", and "abc".
 '''
 
-#mycode
+
+# mycode
 def find_string_anagrams(str, pattern):
-  result_indexes = []
-  # TODO: Write your code here
-  p_dict={}
-  s_dict={}
-  for p in pattern:
-    if p not in p_dict:
-      p_dict[p] = 1
-    else:
-      p_dict[p] += 1
-  
-  for s in range(len(str)):
-    if s<len(pattern):
-      if str[s] not in s_dict:
-        s_dict[str[s]] = 1
-      else:
-        s_dict[str[s]] += 1
-    
-    else:
-      if s_dict[str[s-len(pattern)]] == 1 :
-        del s_dict[str[s-len(pattern)]]
-      else:
-        s_dict[str[s-len(pattern)]] -= 1
+  window_start, matched = 0,0
+  char_dict ={}
+  result=[]
 
-      if str[s] not in s_dict:
-        s_dict[str[s]] = 1
-      else:
-        s_dict[str[s]] += 1
-    
-    if s_dict == p_dict:
-      result_indexes.append(s-len(pattern)+1)
-  return result_indexes
+  for char in pattern :
+    if char not in char_dict:
+      char_dict[char]=0
+    char_dict[char] += 1
+
+  for window_end in range(len(str)):
+    if str[window_end] in char_dict:
+      char_dict[str[window_end]] -= 1
+    if char_dict[str[window_end]] == 0:
+      matched += 1
+
+    if matched == len(pattern):
+      result.append(window_start)
+
+    if window_end >= len(pattern)-1:
+      if char_dict[str[window_start]] == 0:
+        matched  -= 1
+      char_dict[str[window_start]] += 1
+      window_start+=1
+
+  return result
 
 
-#answer
+
+# answer
 def find_string_anagrams(str, pattern):
   window_start, matched = 0, 0
   char_frequency = {}
@@ -99,19 +95,20 @@ def find_string_anagrams(str, pattern):
 
 
 def main():
-  print(find_string_anagrams("ppqp", "pq"))
-  print(find_string_anagrams("abbcabc", "abc"))
+    print(find_string_anagrams("ppqp", "pq"))
+    print(find_string_anagrams("abbcabc", "abc"))
 
 
 main()
 
-
-
 '''
 Time Complexity 
-The time complexity of the above algorithm will be O(N + M) where ‘N’ and ‘M’ are the number of characters in the input string and the pattern respectively.
+The time complexity of the above algorithm will be O(N + M) where ‘N’ and ‘M’ are the number of characters in the input 
+string and the pattern respectively.
 
 Space Complexity 
-The space complexity of the algorithm is O(M) since in the worst case, the whole pattern can have distinct characters which will go into the HashMap. 
-In the worst case, we also need O(N) space for the result list, this will happen when the pattern has only one character and the string contains only that character.
+The space complexity of the algorithm is O(M) since in the worst case, the whole 
+pattern can have distinct characters which will go into the HashMap. 
+In the worst case, we also need O(N) space for the result list, this will happen 
+when the pattern has only one character and the string contains only that character.
 '''
