@@ -23,26 +23,28 @@ Explanation: The longest substrings with no more than '3' distinct characters ar
 
 #mycode
 def longest_substring_with_k_distinct(str, k):
-  dict_arr={}
-  max_len, win_start = 0, 0
+  char_Frequency = {}
+  windowStart = 0
+  maxLen = 0
 
-  for win_end in range(len(str)):
-    if str[win_end] not in dict_arr:
-      dict_arr[str[win_end]]=1
-    else:
-      dict_arr[str[win_end]] +=1
+  for windowEnd in range(len(str)):
+    right = str[windowEnd]
+    if right not in char_Frequency.keys():
+      char_Frequency[right] = 0
+    char_Frequency[right] += 1
 
-    while len(dict_arr) > k:
-      if dict_arr[str[win_start]] == 1:
-        del dict_arr[str[win_start]]
-      else: 
-        dict_arr[str[win_start]] -= 1
-      win_start += 1
+    # 当subString中的字母种类大于k时，shrink window
+    while len(char_Frequency) > k:
+      left = str[windowStart]
+      char_Frequency[left] -= 1
+      if char_Frequency[left] == 0:
+        del char_Frequency[left]
+      windowStart += 1
 
-    if len(dict_arr) == k:
-      max_len=max(max_len,sum(dict_arr.values()))
-  
-  return max_len
+    # 比较maxLen存储的长度 以及 当前subString长度
+    maxLen = max(maxLen, sum(char_Frequency.values()))
+
+  return maxLen
 
 
 #answer
