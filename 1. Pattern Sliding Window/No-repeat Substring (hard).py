@@ -21,31 +21,31 @@ Output: 3
 Explanation: Longest substrings without any repeating characters are "abc" & "cde".
 '''
 
-#mycode
+
+# mycode
 def non_repeat_substring(str):
-  max_len, win_start = 0, 0
-  dict_str={}
+    window_start, max_len = 0, 0
+    char_frequency = {}
 
-  for win_end in range(len(str)):
-    if str[win_end] not in dict_str:
-      dict_str[str[win_end]] = 1
-    else: 
-      dict_str[str[win_end]] += 1
-    
-    while len(dict_str) < sum(dict_str.values()):
-      if dict_str[str[win_start]] == 1:
-        del dict_str[str[win_start]]
-      else:
-        dict_str[str[win_start]] -= 1
-      win_start += 1
+    for window_end in range(len(str)):
+        right = str[window_end]
+        if right not in char_frequency.keys():
+            char_frequency[right] = 0
+        char_frequency[right] += 1
 
-    if len(dict_str) == sum(dict_str.values()):
-      max_len=max(max_len, len(dict_str))
-  return max_len
+        while sum(char_frequency.values()) > len(char_frequency):
+            left = str[window_start]
+            char_frequency[left] -= 1
+            if char_frequency[left] == 0:
+                del char_frequency[left]
+            window_start += 1
+
+        max_len = max(max_len, len(char_frequency))
+
+    return max_len
 
 
-
-#answer
+# answer
 def non_repeat_substring(str):
   window_start = 0
   max_length = 0
@@ -68,13 +68,12 @@ def non_repeat_substring(str):
 
 
 def main():
-  print("Length of the longest substring: " + str(non_repeat_substring("aabccbb")))
-  print("Length of the longest substring: " + str(non_repeat_substring("abbbb")))
-  print("Length of the longest substring: " + str(non_repeat_substring("abccde")))
+    print("Length of the longest substring: " + str(non_repeat_substring("aabccbb")))
+    print("Length of the longest substring: " + str(non_repeat_substring("abbbb")))
+    print("Length of the longest substring: " + str(non_repeat_substring("abccde")))
 
 
 main()
-
 
 '''
 Time Complexity 
