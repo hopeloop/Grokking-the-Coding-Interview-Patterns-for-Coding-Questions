@@ -13,26 +13,26 @@ Input: [-3, -1, 0, 1, 2]
 Output: [0 1 1 4 9]
 '''
 
-#mycode
+
+# mycode
 def make_squares(arr):
-  squares = [0] * len(arr)
-  # TODO: Write your code here
-  i , j = 0, len(arr)-1
-  k = len(arr)-1
-  while i <= j:
-    if arr[i]**2 >= arr[j]**2:
-      squares[k] = arr[i]**2
-      i += 1
-      k -= 1
-    else:
-      squares[k] = arr[j]**2
-      j -= 1
-      k -= 1
+    squares = [None]*len(arr)
+    left, right = 0, len(arr) - 1
 
-  return squares
+    for i in range(len(arr)-1, -1, -1):
+        left_sq=arr[left]*arr[left]
+        right_sq = arr[right]*arr[right]
+        if left_sq >= right_sq:
+            squares[i] = left_sq
+            left += 1
+        else:
+            squares[i] = right_sq
+            right -= 1
+
+    return squares
 
 
-#answer
+# answer
 def make_squares(arr):
   n = len(arr)
   squares = [0 for x in range(n)]
@@ -53,13 +53,11 @@ def make_squares(arr):
 
 
 def main():
-
-  print("Squares: " + str(make_squares([-2, -1, 0, 2, 3])))
-  print("Squares: " + str(make_squares([-3, -1, 0, 1, 2])))
+    print("Squares: " + str(make_squares([-2, -1, 0, 2, 3])))
+    print("Squares: " + str(make_squares([-3, -1, 0, 1, 2])))
 
 
 main()
-
 
 '''
 Time complexity 
