@@ -1,10 +1,9 @@
 '''
-Problem Statement 
-Given an array containing 0s, 1s and 2s, sort the array in-place. You should treat numbers of the array as objects, 
-hence, we can’t count 0s, 1s, and 2s to recreate the array.
+Problem Statement
+Leetcode 75 Sort colors (Dutch National Flag problem)
+Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue.
 
-The flag of the Netherlands consists of three colors: red, white and blue; 
-and since our input array also consists of three different numbers that is why it is called Dutch National Flag problem.
+We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively.
 
 Example 1:
 
@@ -18,29 +17,76 @@ Output: [0 0 1 2 2 2 ]
 '''
 
 
+# mycode
+# 双指针一次遍历 见resolution
+# 单指针，两次遍历
+def dutch_flag_sort(nums):
+    ptr = 0
 
-#mycode
-def dutch_flag_sort(arr):
-  # TODO: Write your code here
-  left, i = 0, 0
-  right = len(arr)-1
+    for i in range(len(nums)):
+        if nums[i] == 0:
+            nums[ptr], nums[i] = nums[i], nums[ptr]
+            ptr += 1
 
-  while i <= right:
-    if arr[i] == 0:
-      arr[i], arr[left] = arr[left], arr[i]
-      left += 1
-      i += 1
-    elif arr[i] == 2:
-      arr[i], arr[right] = arr[right], arr[i]
-      right -= 1 
-    else:
-      i += 1
+    for j in range(len(nums)):
+        if nums[j] == 1:
+            nums[ptr], nums[j] = nums[j], nums[ptr]
+            ptr += 1
 
-  return 
+    return
 
 
+#forward-backward 两次遍历，双指针
+def dutch_flag_sort(nums):
+    pivot_value = 1
+
+    left = 0
+    for i in range(len(nums)):
+        if nums[i] < pivot_value:
+            temp = nums[i]
+            nums[i] = nums[left]
+            nums[left] = temp
+            left += 1
+
+    right = len(nums) - 1
+    for j in range(-1, -len(nums) - 1, -1):
+        if nums[j] > pivot_value:
+            temp = nums[j]
+            nums[j] = nums[right]
+            nums[right] = temp
+            right -= 1
+
+    return
 
 
+# resolution
+def dutch_flag_sort(nums):
+    # all elements < low are 0, and all elements > high are 2
+    # all elements from >= low < i are 1
+
+    low, high = 0, len(nums) - 1
+    i = 0
+    while i <= high:
+        if nums[i] == 0:
+            nums[i], nums[low] = nums[low], nums[i]
+            i += 1
+            low += 1
+        elif nums[i] == 1:
+            i += 1
+        else:
+            nums[i], nums[high] = nums[high], nums[i]
+            # decrement 'high' only, after the swap the number at index could be 0,1,2
+            high -= 1
+    return
+
+
+def main():
+    arr = [1, 0, 2, 1, 0]
+    dutch_flag_sort(arr)
+    print(arr)
+
+
+main()
 
 '''
 Time complexity 

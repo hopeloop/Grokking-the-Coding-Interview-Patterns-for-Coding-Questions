@@ -4,6 +4,7 @@ Problem Challenge 2
 Comparing Strings containing Backspaces (medium)
 
 Given two strings containing backspaces (identified by the character ‘#’), check if the two strings are equal.
+#是累计的，“aa#a###”和“a"不同
 
 Example 1:
 
@@ -31,86 +32,103 @@ Output: true
 Explanation: After applying backspaces the strings become "xywrrmp" and "xywrrmp" respectively.
 '''
 
-#mycode
-def backspace_compare(str1, str2):
-  # TODO: Write your code here
-  if clean(str1) == clean(str2):
+
+# mycode1 无法通过 "#baa""baaa#"
+def backspace_compare(S, T):
+    S = trim_str(S)
+    T = trim_str(T)
+    len_str1 = len(S)
+    len_str2 = len(T)
+    if len_str1 != len_str2:
+        return False
+
+    for i in range(len_str1):
+        if S[i] != T[i]:
+            return False
+
     return True
-  return False
-
-def clean(str):
-  i= len(str)-1
-  while i >= 0:
-    count = 0
-    
-    while i >= 0 and str[i] == '#':
-      count += 1
-      i -= 1
-    
-    if count > 0 and i+count == len(str)-1:
-      str=str[:i-count+1]
-      i = i - count 
-
-    elif count > 0 and i-count+1==0 :
-      str=str[i+count+1:]
-      i=-1
-
-    elif count>0 :
-      str=str[:i-count+1]+ str[i+count+1:]
-      i=i-count -1   
-      print(str)
-    else:
-      i=i-1
-        
-    print(str,count,i)
-  return str
 
 
-#answer
+def trim_str(str):
+    idx = 0
+    while idx < len(str):
+        if str[idx] == '#':
+            left, right = idx, idx + 1
+            while right < len(str) and str[right] == '#':
+                right += 1
+                left -= 1
+            str = str[:left - 1] + str[right:]
+            idx = left
+        idx += 1
+    return str
+
+
+# 时间复杂度O(n)，新增两个列表的做法
+def backspaceCompare(S, T):
+    s = trim(S)
+    t = trim(T)
+
+    return s == t
+
+
+def trim(str):
+    s = []
+    for ele in str:
+        if ele == '#':
+            if s:
+                s.pop()
+        else:
+            s.append(ele)
+    return "".join(s)
+
+
+# O(1)空间复杂度的做法，从后往前扫描
+# answer
 def backspace_compare(str1, str2):
-  # use two pointer approach to compare the strings
-  index1 = len(str1) - 1
-  index2 = len(str2) - 1
-  while (index1 >= 0 or index2 >= 0):
-    i1 = get_next_valid_char_index(str1, index1)
-    i2 = get_next_valid_char_index(str2, index2)
-    if i1 < 0 and i2 < 0:  # reached the end of both the strings
-      return True
-    if i1 < 0 or i2 < 0:  # reached the end of one of the strings
-      return False
-    if str1[i1] != str2[i2]:  # check if the characters are equal
-      return False
+    # use two pointer approach to compare the strings
+    index1 = len(str1) - 1
+    index2 = len(str2) - 1
+    while (index1 >= 0 or index2 >= 0):
+        i1 = get_next_valid_char_index(str1, index1)
+        i2 = get_next_valid_char_index(str2, index2)
+        if i1 < 0 and i2 < 0:  # reached the end of both the strings
+            return True
+        if i1 < 0 or i2 < 0:  # reached the end of one of the strings
+            return False
+        if str1[i1] != str2[i2]:  # check if the characters are equal
+            return False
 
-    index1 = i1 - 1
-    index2 = i2 - 1
+        index1 = i1 - 1
+        index2 = i2 - 1
 
-  return True
+    return True
 
 
 def get_next_valid_char_index(str, index):
-  backspace_count = 0
-  while (index >= 0):
-    if str[index] == '#':  # found a backspace character
-      backspace_count += 1
-    elif backspace_count > 0:  # a non-backspace character
-      backspace_count -= 1
-    else:
-      break
+    backspace_count = 0
+    while (index >= 0):
+        if str[index] == '#':  # found a backspace character
+            backspace_count += 1
+        elif backspace_count > 0:  # a non-backspace character
+            backspace_count -= 1
+        # 重点在于这个else，
+        else:
+            break
 
-    index -= 1  # skip a backspace or a valid character
+        index -= 1  # skip a backspace or a valid character
 
-  return index
+    return index
 
 
 def main():
-  print(backspace_compare("xy#z", "xzz#"))
-  print(backspace_compare("xy#z", "xyz#"))
-  print(backspace_compare("xp#", "xyz##"))
-  print(backspace_compare("xywrrmp", "xywrrmu#p"))
+    print(backspace_compare("y#fo##f","y#f#o##f"))
+    print(backspace_compare("xy#z", "xzz#"))
+    print(backspace_compare("xy#z", "xyz#"))
+    print(backspace_compare("xp#", "xyz##"))
+    print(backspace_compare("xywrrmp", "xywrrmu#p"))
 
 
 main()
-
 
 '''
 Time complexity 
